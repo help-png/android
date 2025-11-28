@@ -1,0 +1,247 @@
+MainActivity.java
+package com.example.twofragmentcolorapp;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity
+        implements BgFragment.BackgroundListener, TextFragment.TextColorListener {
+
+    FrameLayout root;
+    TextView sampleText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        root = findViewById(R.id.rootLayout);
+        sampleText = findViewById(R.id.sampleText);
+
+        if(savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.bgContainer, new BgFragment())
+                    .replace(R.id.textContainer, new TextFragment())
+                    .commit();
+        }
+    }
+
+    @Override
+    public void changeBackground(int color) {
+        root.setBackgroundColor(color);
+    }
+
+    @Override
+    public void changeTextColor(int color) {
+        sampleText.setTextColor(color);
+    }
+}
+
+✔ BgFragment.java (Fragment to set Background)
+package com.example.twofragmentcolorapp;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.os.Bundle;
+import androidx.fragment.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+public class BgFragment extends Fragment {
+
+    BackgroundListener listener;
+
+    public interface BackgroundListener {
+        void changeBackground(int color);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (BackgroundListener) context;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_bg, container, false);
+
+        Button b1 = v.findViewById(R.id.btnWhite);
+        Button b2 = v.findViewById(R.id.btnYellow);
+        Button b3 = v.findViewById(R.id.btnGray);
+
+        b1.setOnClickListener(view -> listener.changeBackground(Color.WHITE));
+        b2.setOnClickListener(view -> listener.changeBackground(Color.YELLOW));
+        b3.setOnClickListener(view -> listener.changeBackground(Color.LTGRAY));
+
+        return v;
+    }
+}
+
+✔ TextFragment.java (Fragment to set Text Foreground Color)
+package com.example.twofragmentcolorapp;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.os.Bundle;
+import androidx.fragment.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+public class TextFragment extends Fragment {
+
+    TextColorListener listener;
+
+    public interface TextColorListener {
+        void changeTextColor(int color);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (TextColorListener) context;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_text, container, false);
+
+        Button b1 = v.findViewById(R.id.btnBlack);
+        Button b2 = v.findViewById(R.id.btnRed);
+        Button b3 = v.findViewById(R.id.btnBlue);
+
+        b1.setOnClickListener(view -> listener.changeTextColor(Color.BLACK));
+        b2.setOnClickListener(view -> listener.changeTextColor(Color.RED));
+        b3.setOnClickListener(view -> listener.changeTextColor(Color.BLUE));
+
+        return v;
+    }
+}
+
+✔ activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/sampleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sample Text"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/bgContainer"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
+        <FrameLayout
+            android:id="@+id/textContainer"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
+
+✔ fragment_bg.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:text="Background Color"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnWhite"
+        android:text="White"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnYellow"
+        android:text="Yellow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnGray"
+        android:text="Gray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+✔ fragment_text.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:text="Text Color"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnBlack"
+        android:text="Black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnRed"
+        android:text="Red"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnBlue"
+        android:text="Blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+✔ AndroidManifest.xml (app snippet)
+<application ...>
+    <activity android:name=".MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+</application>
+
+
+
+//Create an application with 2 fragments, one to set the background and other to set the
+fore-color of the text.

@@ -1,0 +1,85 @@
+TwoDim.java :-
+package P1;
+
+public class TwoDim {
+
+    private int x, y;
+
+    public TwoDim() {
+        x = 0;
+        y = 0;
+    }
+
+    public TwoDim(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+}
+
+
+
+
+
+ThreeDim.java:-
+package P2;
+
+import P1.TwoDim;
+
+public class ThreeDim extends TwoDim {
+
+    private int z;
+
+    public ThreeDim() {
+        super(0, 0);
+        this.z = 0;
+    }
+
+    public ThreeDim(int x, int y, int z) {
+        super(x, y);
+        this.z = z;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace(")", ", " + z + ")");
+    }
+}
+
+
+
+
+
+
+Main.java:-
+package P;
+
+import P1.TwoDim;
+import P2.ThreeDim;
+
+public class Main {
+    public static void main(String[] args) {
+
+        TwoDim obj;
+
+        obj = new TwoDim(3, 4);
+        System.out.println("TwoDim Object: " + obj);
+
+        obj = new ThreeDim(5, 6, 7);  // Upcasting → dynamic dispatch
+        System.out.println("ThreeDim Object: " + obj);
+    }
+}
+
+
+
+//Create a class TwoDim which contains private members as x and y coordinates in
+// package P1. Define the default constructor, a parameterized constructor and override
+// toString() method to display the co-ordinates. Now reuse this class and in package P2
+// create another class ThreeDim, adding a new dimension as z as its private member.
+// Define the constructors for the subclass and override toString() method in the subclass
+// also. Write appropriate methods to show dynamic method dispatch. The main()
+// function should be in a package P.

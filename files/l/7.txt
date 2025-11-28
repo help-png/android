@@ -1,0 +1,192 @@
+MainActivity.java
+package com.example.lifecycleapp;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+    TextView tvLog;
+    Button btnOpen, btnAdd, btnRemove;
+    final String TAG="MainActivity";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        tvLog = findViewById(R.id.tvLog);
+        btnOpen = findViewById(R.id.btnOpen);
+        btnAdd = findViewById(R.id.btnAddFrag);
+        btnRemove = findViewById(R.id.btnRemoveFrag);
+
+        btnOpen.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { startActivity(new Intent(MainActivity.this,SecondActivity.class)); }
+        });
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if(getSupportFragmentManager().findFragmentByTag("demo")==null){
+                    getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, new DemoFragment(), "demo")
+                        .addToBackStack(null)
+                        .commit();
+                }
+            }
+        });
+        btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if(getSupportFragmentManager().findFragmentByTag("demo")!=null){
+                    getSupportFragmentManager().popBackStack();
+                }
+            }
+        });
+
+        log("onCreate");
+    }
+
+    void log(String m){
+        tvLog.setText(m+"\n"+tvLog.getText());
+        Log.d(TAG,m);
+    }
+
+    @Override protected void onStart(){ super.onStart(); log("onStart"); }
+    @Override protected void onResume(){ super.onResume(); log("onResume"); }
+    @Override protected void onPause(){ super.onPause(); log("onPause"); }
+    @Override protected void onStop(){ super.onStop(); log("onStop"); }
+    @Override protected void onDestroy(){ super.onDestroy(); log("onDestroy"); }
+    @Override protected void onRestart(){ super.onRestart(); log("onRestart"); }
+    @Override protected void onSaveInstanceState(Bundle outState){ super.onSaveInstanceState(outState); log("onSaveInstanceState"); }
+    @Override protected void onRestoreInstanceState(Bundle savedInstanceState){ super.onRestoreInstanceState(savedInstanceState); log("onRestoreInstanceState"); }
+}
+
+SecondActivity.java
+package com.example.lifecycleapp;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+
+public class SecondActivity extends AppCompatActivity {
+    TextView tvLog;
+    final String TAG="SecondActivity";
+
+    @Override protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+        tvLog = findViewById(R.id.tvLog2);
+        log("onCreate");
+    }
+
+    void log(String m){
+        tvLog.setText(m+"\n"+tvLog.getText());
+        Log.d(TAG,m);
+    }
+
+    @Override protected void onStart(){ super.onStart(); log("onStart"); }
+    @Override protected void onResume(){ super.onResume(); log("onResume"); }
+    @Override protected void onPause(){ super.onPause(); log("onPause"); }
+    @Override protected void onStop(){ super.onStop(); log("onStop"); }
+    @Override protected void onDestroy(){ super.onDestroy(); log("onDestroy"); }
+    @Override protected void onRestart(){ super.onRestart(); log("onRestart"); }
+    @Override protected void onSaveInstanceState(Bundle outState){ super.onSaveInstanceState(outState); log("onSaveInstanceState"); }
+    @Override protected void onRestoreInstanceState(Bundle savedInstanceState){ super.onRestoreInstanceState(savedInstanceState); log("onRestoreInstanceState"); }
+}
+
+DemoFragment.java
+package com.example.lifecycleapp;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+public class DemoFragment extends Fragment {
+    TextView tvFrag;
+    final String TAG="DemoFragment";
+
+    @Override public void onAttach(@NonNull Context context){ super.onAttach(context); Log.d(TAG,"onAttach"); }
+    @Override public void onCreate(@Nullable Bundle savedInstanceState){ super.onCreate(savedInstanceState); Log.d(TAG,"onCreate"); }
+    @Nullable @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.fragment_demo,container,false);
+        tvFrag = v.findViewById(R.id.tvFragLog);
+        log("onCreateView");
+        return v;
+    }
+    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){ super.onViewCreated(view,savedInstanceState); log("onViewCreated"); }
+    @Override public void onStart(){ super.onStart(); log("onStart"); }
+    @Override public void onResume(){ super.onResume(); log("onResume"); }
+    @Override public void onPause(){ super.onPause(); log("onPause"); }
+    @Override public void onStop(){ super.onStop(); log("onStop"); }
+    @Override public void onDestroyView(){ super.onDestroyView(); log("onDestroyView"); }
+    @Override public void onDestroy(){ super.onDestroy(); Log.d(TAG,"onDestroy"); }
+    @Override public void onDetach(){ super.onDetach(); Log.d(TAG,"onDetach"); }
+
+    void log(String m){
+        if(tvFrag!=null) tvFrag.setText(m+"\n"+tvFrag.getText());
+        Log.d(TAG,m);
+    }
+}
+
+res/layout/activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="12dp" android:orientation="vertical"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+        <Button android:id="@+id/btnOpen" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Open Activity"/>
+        <Button android:id="@+id/btnAddFrag" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Add Fragment"/>
+        <Button android:id="@+id/btnRemoveFrag" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Remove Fragment"/>
+    </LinearLayout>
+
+    <TextView android:id="@+id/tvLog" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:text="MainActivity Log:\n" android:textSize="14sp" android:paddingTop="8dp"/>
+
+    <FrameLayout android:id="@+id/fragmentContainer" android:layout_width="match_parent" android:layout_height="220dp" android:background="#eeeeee"/>
+</LinearLayout>
+
+res/layout/activity_second.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="12dp" android:orientation="vertical"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:id="@+id/tvLog2" android:layout_width="match_parent" android:layout_height="match_parent" android:text="SecondActivity Log:\n" android:textSize="14sp"/>
+</LinearLayout>
+
+res/layout/fragment_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:id="@+id/tvFragLog" android:layout_width="match_parent" android:layout_height="match_parent" android:text="Fragment Log:\n" android:textSize="13sp"/>
+</FrameLayout>
+
+AndroidManifest.xml (application block snippet)
+<application ...>
+    <activity android:name=".SecondActivity"/>
+    <activity android:name=".MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+</application>
+
+
+
+
+
+
+
+//Create an Application to display various Activity and Fragment Life Cycle Methods

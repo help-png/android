@@ -1,0 +1,46 @@
+ColorApplet.java:-
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+
+/* <applet code="ColorApplet" width=400 height=300> </applet> */
+
+public class ColorApplet extends Applet implements ActionListener {
+
+    Button redBtn, blueBtn;
+
+    @Override
+    public void init() {
+        setLayout(new FlowLayout());
+
+        redBtn = new Button("Red");
+        blueBtn = new Button("Blue");
+
+        add(redBtn);
+        add(blueBtn);
+
+        redBtn.addActionListener(this);
+        blueBtn.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+
+        if(cmd.equals("Red")) {
+            setBackground(Color.RED);
+        } else if(cmd.equals("Blue")) {
+            setBackground(Color.BLUE);
+        }
+
+        repaint();
+    }
+}
+
+
+
+
+
+//Write a program to create an Applet that has two buttons named “Red” and “Blue”.
+// When a button is pressed, the background color of the applet is set to the color named
+// by the button‟s label.
